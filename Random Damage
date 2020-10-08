@@ -1,3 +1,4 @@
+
 -- Damagescript for Damage-Obby-Path or for Bullets
   local DamagePart = script.Parent
   local function onPartTouch(otherPart)
