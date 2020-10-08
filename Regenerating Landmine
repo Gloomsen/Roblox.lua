@@ -1,0 +1,20 @@
+
+	-- regenerating Landmine
+  -- Idea: Random placement in a region after Explode
+	
+	local scharf = true
+	script.Parent.Touched:connect(function(hit)
+		if scharf == true then
+			if hit.Parent:FindFirstChild("Humanoid") ~= nil then
+				scharf = false
+				local e = Instance.new("Explosion", script.Parent)
+				e.Position = script.Parent.Position
+				scrpt.Parent.Transparency = 1
+				wait(10)
+				scharf = false
+				script.Parent.transparency = 0
+			end
+		end
+	end)
+  
+  
