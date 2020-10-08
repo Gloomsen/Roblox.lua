@@ -1,0 +1,20 @@
+
+-- just an Easy HealthPad
+	
+	local db = false
+	script.Parent.Touched:connect(function(hit)
+		if hit.parent:FindFirstChild("Humanoid") then
+			if db == false then
+				if hit.Parent.Humanoid.Health < 100 then
+					hit.Parent.Humanoid.Health = hit.Parent.Humanoid.MaxHealth
+					db = true
+					script.Parent.Brickcolor = Brickcolor.new("Bright red")
+					wait(10)
+					db = false
+					script.Parent.BrickColor = BrickColor.new("Bright green")
+				end
+			end
+		end
+	end)
+	
+  
