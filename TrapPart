@@ -1,0 +1,17 @@
+    
+    -- Easy Trap for Obbys, Kills the player on hit
+    
+    local trapPart = script.Parent
+     
+    local function onPartTouch(otherPart)
+    	local partParent = otherPart.Parent
+    	local humanoid = partParent:FindFirstChildWhichIsA("Humanoid")
+    	if humanoid then
+    	
+    		humanoid.Health = 0 -- Set player's health to 0
+        
+    	end
+    end
+    trapPart.Touched:Connect(onPartTouch)
+    
+    
