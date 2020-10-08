@@ -4,7 +4,7 @@
   local function onPartTouch(otherPart)
     local partParent = otherPart.Parent
     local humanoid = partParent:FindFirstChildWhichIsA("Humanoid")
-    local DamagePoints = math.random(1,10) -- set the Damagepoints to Random between 1 to 10 
+    DamagePoints = math.random(1,10) -- set the Damagepoints to Random between 1 to 10 
 
       if humanoid then
 			    		
