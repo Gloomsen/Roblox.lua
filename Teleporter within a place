@@ -1,0 +1,18 @@
+	
+  -- Easy Teleportscript on Touch/Hit within your Gameplace, not to another Place! 
+  -- caution: could be an Error inside the script
+  
+  local PorterPart = script.Parent
+     
+    local function onPartTouch(otherPart)
+    	local partParent = otherPart.Parent
+    	local humanoid = partParent:FindFirstChildWhichIsA("Humanoid")
+		
+    	if humanoid then
+            game.Workspace.Player.HumanoidRootPart.CFrame = CFrame.new(Vector3.new(0, 50, 0))1 -- Port the Player to Coordinates 0,50,0 - Change this to your Coordinates
+    	end
+      
+    end
+    PorterPart.Touched:Connect(onPartTouch)
+    
+    
