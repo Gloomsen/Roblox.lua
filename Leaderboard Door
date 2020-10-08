@@ -1,0 +1,27 @@
+
+
+-- Door thats opens if enough Points an Leaderstats board
+	-- Script into the DoorPart
+	-- required: Leaderstatsboard
+	
+	local required_points = 100 -- Change to a value of your choice
+	local db = false
+	script.Parent.Touched:connect(function(hit)
+		if hit.parent:FindFirstChild("Humanoid") then
+			local player = game.Player:GetPlayerFromCharacter(hit.parent)
+			if player.leaderstats.Points.Value >= required_points then
+				if db then
+					db = false
+					script.Parent.Transparency = 0.5
+					script.Parent.CanCollide = false
+					wait(3)
+					script.Parent.Transparency = 0
+					script.Parent.CanCollide = true
+					db = true
+				end
+			
+			-- Optional: Player died if not enough Points
+			--else
+			--	player.Character.Humanoid.Health = 0
+			
+			end
