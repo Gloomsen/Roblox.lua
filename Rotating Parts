@@ -1,0 +1,12 @@
+
+
+-- RotatorScript for Parts 
+-- works only with Parts, not with Meshes or Modules
+-- for Meshparts use the Hinge-Solution
+	
+	while true do
+	  wait()
+	  script.parent.CFrame = script.Parent.CFrame * CFrame.fromEulerAnglesXYZ(0.1,0,0) -- Negate the value to change the direction of rotation i.E (-0.1,0,0)
+	end
+  
+  
