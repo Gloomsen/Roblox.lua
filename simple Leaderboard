@@ -1,0 +1,26 @@
+-- Leaderstats board
+--> ServerScriptService --> new Script "PlayerSetup"
+	
+	local function onPlayerJoin(player)
+    local leaderstats = Instance.new("Folder")
+    	leaderstats.Name = "leaderstats"
+    	leaderstats.Parent = player
+       	
+		local gold = Instance.new("IntValue") -- "gold" is just an easy-to-remember variable name 
+		gold.Name = "Gold" -- or a name of your Choice i.E. Bucks, Coins, Emerald, Points, etc
+		gold.Value = 0
+		gold.Parent = leaderstats
+		
+		-- want more then one Stats? then copy and paste next 4 Lines
+		-- for every new Stat a new Variable Name! recommendation: Do not use more than 4 stats
+		
+		--local items= Instance.new("IntValue") --"items" is just an easy-to-remember variable name, change if "items" already in use
+		--items.Name = "Items" -- or a not used name of your Choice i.E. Bucks, Coins, Emerald, Points, etc
+		--items.Value = 0
+		--items.Parent = leaderstats
+    
+    
+   end
+	game.Players.PlayerAdded:Connect(onPlayerJoin)
+  
+  
