@@ -2,7 +2,6 @@
 Scriptlets for Roblox Games
 
 its just a collection of free Scripts & Scriptlets i used for Roblox-Games
-Feal free to use it, too
 
 Caution: 
 
