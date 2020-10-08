@@ -1,0 +1,25 @@
+
+
+-- Teleport over StarterGUI-Button
+	-- Needed:  Create one Part called "TeleportPart" under WORKSPACE
+	-- Needed:  Workspace -> StarterGui -> add ScreenGui -> add TextButton into ScreenGui
+	-- LocalScript into TextButton
+	
+	local port = true
+	local player = game.Players.LocalPlayer
+	local target = game.Workspace.TeleportPart
+	local delay = 3
+	script.Parent.MouseButton1Click:connect(function()
+		if port == true then
+			port = false
+			player.Character.HumanoidRootPart.Cframe = target.CFrame * CFrame.new(0,3,0)
+			for i = delay, 1, -1 do
+				script.Parent.Text = i
+				wait(1)
+			end
+			script.Parent.Text = "Teleport"
+			port = true
+		end
+	end)	
+				
+        
