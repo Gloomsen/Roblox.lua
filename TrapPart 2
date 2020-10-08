@@ -1,0 +1,10 @@
+
+    -- Alternative Trap Brick Script for Obbys
+    
+    script.Parent.Touched:Connect(function(hit)
+        if hit.Parent:FindFirstChild("Humanoid") ~= nil then
+            hit.Parent:FindFirstChild("Humanoid"):TakeDamage(100)
+        end
+    end)
+    
+    
