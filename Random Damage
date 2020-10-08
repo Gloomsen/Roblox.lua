@@ -1,0 +1,18 @@
+-- Damagescript for Damage-Obby-Path or for Bullets
+  local DamagePart = script.Parent
+  local function onPartTouch(otherPart)
+    local partParent = otherPart.Parent
+    local humanoid = partParent:FindFirstChildWhichIsA("Humanoid")
+    local DamagePoints = math.random(1,10) -- set the Damagepoints to Random between 1 to 10 
+
+      if humanoid then
+			    		
+        humanoid.Health = humanoid.Health - DamagePoints -- decreased player's health
+    		
+      end
+    end
+   DamagePart.Touched:Connect(onPartTouch)
+    
+    
+    
+    
