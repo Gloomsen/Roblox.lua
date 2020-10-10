@@ -1,0 +1,11 @@
+
+-- Flickering light for candles and torches
+-- best used in "PointerLight"
+
+local light = script.Parent
+
+while true do
+	y = math.random(7,10) -- random Range between 7 and 10 studs
+ 	light.Range = y
+		wait(0.1)
+end
