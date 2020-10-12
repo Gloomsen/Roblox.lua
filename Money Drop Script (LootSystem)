@@ -1,0 +1,58 @@
+-- Money-Drop-System by Ripperoni
+
+
+-- Leaderstats-Script in ServerScriptService
+
+
+function take(p)
+	amount = (p.leaderstats.Money.Value *0.05)
+	if amount >= 5000 then -- dont take more then 5% of 5000
+		amount = 5000
+	end
+	p.leaderstats.Money.Value = p.leaderstats.Money.Value - math.floor(amount)
+	return math.floor(amount)
+end
+
+function addCommas(str)
+	return #str % 3 == 0 and str:reverse():gsub("(%d%d%d)", "%1,"):reverse():sub(2) or str:reverse():gsub("(%d%d%d)", "%1"):reverse()
+end
+
+game.Players.PlayerAdded:connect(function(player)
+	local fold = Instance.new("Folder", player)
+	fold.Name = "leaderstats"
+	local val = Instance(IntValue", fold)
+	val.Name = "Points"
+	val.Value = 0
+	
+	player.CharacterAdded:connect(function(char)
+		char.Humanoid.Died:connect(function(hum)
+			amount = take(player)
+			local cash = game.ReplicatedStorage.Cash:Clone()
+			cash.Parent = game.Workspace
+			cash.CFrame = CFrame.new(char.HumanoidRootPart.Position) + Vector3.new(0,3,0)
+			cash.Cash.Value = amount
+			if amount > 999 then
+				amount = addCommas(tostring(amount))
+			end
+			
+			--cash.Tag.Label.Amount.Text = "$"..amount..".00"
+			
+		end)
+	end)
+end)
+
+-- ServerScriptService END --
+
+
+-- Part For Money Drop
+-- i.E. Coins or Emeralds --> Insert Bool "Value" and name it "Cash" und put it into ReplicatedStorage
+
+
+script.Parent.Touched:connect(function(hit)
+	if hit.Parent:FindFirstChild("Humanoid") then
+		local player = game.Players:GetPlayerFromCharacter(hit.Parent)
+		if hit.Parent.Humanoid.Health > 0 then
+			player.leaderstats.Money.Value = player.leaderstats.Money.Value + script.Parent.Cash.Valuescript.Parent:Remove()
+		end
+	end
+end)
