@@ -2,7 +2,10 @@
 
 -- RotatorScript for Parts 
 -- works only with Parts, not with Meshes or Modules
--- for Meshparts use the Hinge-Solution
+
+-- Caution: May cause lag on Client!
+-- for better performance use the Hinge-Solution, not this Script
+
 	
 	while true do
 	  wait()
