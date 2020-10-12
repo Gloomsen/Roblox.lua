@@ -1,0 +1,16 @@
+-- Script from Roblox
+-- for more Information: https://developer.roblox.com/en-us/articles/Teleporting-Between-Places
+
+    local TeleportService = game:GetService("TeleportService")
+     
+    local placeID_1 = [Set here  your PlaceID 1]  
+    local placeID_2 = [Set here  your PlaceID 2]
+     
+    local function onPartTouch(otherPart)
+    	local player = game.Players:GetPlayerFromCharacter(otherPart.Parent)
+    	if player then
+    		TeleportService:Teleport(placeID_1, player)
+    	end
+    end
+    script.Parent.Touched:Connect(onPartTouch)
+
