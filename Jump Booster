@@ -1,0 +1,24 @@
+
+
+-- Jump Booster
+
+    local boostPart = script.Parent
+-- Set a variable for boosted jump power
+	local BOOSTED_JUMP_POWER = 125
+
+    local function onPartTouch(otherPart)
+    	local partParent = otherPart.Parent
+    	local humanoid = partParent:FindFirstChildWhichIsA("Humanoid")
+    	if humanoid then
+    		boostPart.CanCollide = false
+    		local currentJumpPower = humanoid.JumpPower
+    		if currentJumpPower < BOOSTED_JUMP_POWER then
+    			humanoid.JumpPower = BOOSTED_JUMP_POWER
+				--boostPart.transparent = 1
+				wait(10)
+    			humanoid.JumpPower = currentJumpPower
+				--boostPart.transparent = 0
+    		end
+    	end
+    end
+	boostPart.Touched:Connect(onPartTouch)
