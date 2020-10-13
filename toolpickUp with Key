@@ -1,0 +1,127 @@
+
+
+-- toolpickUp with Key
+
+--> workspace -> add Folder "tools" and put your tools inside
+--> ServerScriptService -> add Script "toolHandler"
+
+local re = Instance.new("RemoteEvent")
+re.Parent = game:GetService("ReplicatedStorage")
+re.Name = "toolEvent"
+
+re.OnServerEvent:Connect(function(plr, tool)
+	local mag = (tool.Handle.Position - plr.Character.HumanoidRootPart.Position).magnitude
+	
+	if min then
+		if min < 5 then	
+			tool.Parent = plr.Backpack
+		end
+	end
+
+end)
+
+
+function untouch(list)
+	for i = 1, #list do
+		local handle = list[i]:WaitForChild("Handle")
+		if handle then
+			local ti = handle:findFirstChild("antiTouch")
+			if not ti then
+				local clone = script.antitouch:Clone() --<<
+				clone.Parent = handle
+				clone.Disabled = false
+			end
+		end
+	end
+end
+
+local tools = workspace:WaitForChild("tools"):GetChildren()
+untouch(tools)
+
+workspace.tools.ChildAdded:Connect(function(child)
+	untouch({child})
+end)
+
+workspace.ChildAdded:Connect(function(child)
+	if child:IsA("Tool") then
+		wait()
+		child.Parent = Workspace.tools
+	end
+end)
+
+--> ServerScriptService -> Script "toolHandler" -> add Script "antiTouch" with Behavior "Disabled"
+
+local ti = script.Parent:FindFirstChild("TouchInterest")
+if ti then
+	ti:Destroy()
+end
+
+script.Parent.ChildAdded:Connect(function(child)
+	if child:IsA("TouchTranmitter") then
+		wait()
+		child:Destroy()
+	end
+end)
+
+--> StarterGUI --> add ScreenGUI name it "keyGui" --> add TextButton name it E -> Text to E
+--> StarterGUI --> add LocalScript name it "toolScript"
+
+local uis = game:GetService("UserInputService")
+local rs = game:GetService("ReplicatedStorage")
+local event = rs:WaitForChild("toolEvent") --<<
+
+local plr = game.Player.LocalPlayer
+local kg = plr.PlayerGui:WaitForChild("keyGUI")
+local char = plr.Character
+
+function search()
+	local tools = workspace:WaitForChild("tools"):GetChildren()
+	local min = nil
+	local tool = nil
+	
+	for i = 1, #tools do
+		local handle = tools[i]:FindFirstChild("Handle")
+		if handle then
+			local mag = (char.HumanoidRootPart.Position - handle.Position).magnitude
+			if min == nil or mag < min then
+				min = mag
+				tool = tools[i]
+			end
+		end
+	end
+	
+	if min then
+		if min < 5 then	
+			return tool
+		end
+	end
+end
+
+uis.InputBegan:Connect(function(input, gameProcessed)
+	if input.UserInputType.Name == "Keyboard" and gameProcessed == false then
+		if input.KeyCode.Name == "E" then
+			local tool = search()
+			if tool then
+				event:FireServer(tool)
+				kg.E.Visible = false
+			end
+		end
+	end
+end)		
+
+
+
+while wait(1) do
+	local tool = search()
+	if tool then
+		kg.E.Visible = true
+	else
+		kg.E.Visible = false
+end
+	
+
+
+
+
+
+
