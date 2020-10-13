@@ -1,0 +1,39 @@
+
+--- TOOL - Build a sword with Animations and Random Damage
+
+--> Tool -> Add Parts, BoolValue "CanDamage" and 2 Animations called "Idle" & "Attack"
+
+--> Tool -> LocalScript 
+
+local CanAttack = true
+local idle = script.Parent.Humanoid:LoadAnimation(script.Idle)
+local attack = script.Parent.Humanoid:LoadAnimation(script.Attack)
+	
+script.Parent.Equipped:connect(function()
+	idle:Play()
+end)
+
+script.Parent.Activated:connect(function()
+	if CanAttack == true then
+		attack:Play()
+		idle:Stop()
+		CanAttak = false
+		wait(1)
+		attack:Stop()
+		idle:Play()
+		CanAttack = true
+		script.Parent.CanDamage.Value = true
+	end
+end)
+
+--> Tool -> SwordScript
+
+script.Parent.blade.Touched:connect(function(player)
+	if script.Parent.CanDamage.Value == true then
+		local blowdamage = math.Random(5,20) -- makes a damage between 5 and 20 Points
+		script.Parent.CanDamage.Value = false
+		player.Parent.Humanoid:TakeDamage(blowdamage)
+	end
+end)
+
+
