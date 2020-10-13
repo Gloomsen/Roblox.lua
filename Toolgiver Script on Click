@@ -1,0 +1,21 @@
+
+--> Tool Giver Script on Click
+
+--> Part or Model --> add ClickDetector -> inside Script
+--> add your tool in ReplicatedStorage
+
+local use = script.Parent
+local repstore = game:GetService("ReplicatedStorage")
+local item = repstore.YOUR_TOOL_NAME_HERE]
+local db = false
+
+use.MouseClick:Connect(function(player)
+	if db == false then
+		db = true
+		local copy = item:Clone()
+		copy.Parent = player.BackPack
+		wait(2)
+		db = false
+		
+	end
+end)
