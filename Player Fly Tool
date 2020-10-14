@@ -1,0 +1,109 @@
+-- ROBLOX OWN SCRIPT
+
+    -- ========================================
+    -- GLOBAL VARIABLES
+    -- ========================================
+    local power = 30
+    wait() 
+    local tool = nil
+     
+    local bpos = Instance.new("BodyPosition") 
+    local gyro = Instance.new("BodyGyro") 
+     
+    local fly = false 
+     
+    local player = game.Players.LocalPlayer 
+     
+    local character = player.Character
+    if not character or not character.Parent then
+        character = player.CharacterAdded:wait()
+    end
+     
+    local char = character:FindFirstChild("UpperTorso")
+    if not char then char = character:FindFirstChild("Torso") end
+     
+    local mouse = game.Players.LocalPlayer:GetMouse()
+    -- ========================================
+    -- ========================================
+     
+     
+    -- ========================================
+    -- SETUP FUNCTION
+    -- ========================================
+     
+    -- Create a new tool and place it in the local player's backpack
+    -- Make this script a child of the tool, script controls flying
+    local function setupTool()
+    	tool = Instance.new("Tool")
+    	tool.Name = "Fly"
+    	tool.RequiresHandle = false
+    	tool.Parent = game.Players.LocalPlayer.Backpack
+    	
+    	gyro.maxTorque = Vector3.new(math.huge,math.huge,math.huge) 
+    	bpos.maxForce = Vector3.new(math.huge,math.huge,math.huge)
+    	
+    	script.Parent = tool
+    	
+    	tool.Parent = game.Players.LocalPlayer.Backpack
+    end
+     
+    setupTool()
+    -- ========================================
+    -- ========================================
+     
+     
+    -- ========================================
+    -- FLY FUNCTIONS
+    -- ========================================
+     
+    -- Start flying when player uses tool
+    function onSelected() 	
+    	bpos.Parent = char 
+    	bpos.position = char.Position + Vector3.new(0,10,0) 
+    	gyro.Parent = char 
+    	
+    	character.Humanoid.PlatformStand = true 
+     
+    	for i, v in ipairs(char:GetChildren()) do 
+    		if v.className == "Motor" then 
+    			v.MaxVelocity = 0 
+    			v.CurrentAngle = -1 
+    			if v.Name == "Left Hip" then 
+    				v.CurrentAngle = 1 
+    			end 
+    		end 
+    	end
+    	
+    	fly = true 
+    	wait()
+    	while fly do
+    		local pos = mouse.Hit.p
+    		gyro.CFrame = CFrame.new(char.Position,pos) * CFrame.fromEulerAnglesXYZ(-3.14/2,0,0) 
+    		bpos.Position = char.Position + (pos-char.Position).unit * power 
+    		wait()
+    	end 
+    end 
+     
+    -- Stop flying when player stops using tool
+    function onDeselected() 
+    	gyro.Parent = nil 
+    	fly = false 
+     
+    	character.Humanoid.PlatformStand = false 
+    	
+    	for i, v in ipairs(char:GetChildren()) do 
+    		if v.className == "Motor" then 
+    			v.MaxVelocity = 1 
+    		end 
+    	end
+     
+    	bpos.Parent = nil 
+    end 
+     
+    tool.Unequipped:Connect(function() fly = false end)
+     
+    tool.Activated:Connect(onSelected) 
+    tool.Deactivated:Connect(onDeselected)
+    -- ========================================
+    -- ========================================
+
