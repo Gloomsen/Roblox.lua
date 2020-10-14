@@ -12,7 +12,7 @@ local backpack = player:WaitForChild("Backpack")
 local hadToolEquipped = false
 
 humanoid.Died:Connect(function()
-	for i, toll in pairs(character:GetChildren()) do
+	for i, tool in pairs(character:GetChildren()) do
 		if tool:IsA("Tool") then
 			hadToolEquipped = true
 			tool.Parent = game.ReplicatedStorage
