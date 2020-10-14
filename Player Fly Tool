@@ -1,5 +1,9 @@
 -- ROBLOX OWN SCRIPT
 
+--> StarterPlayer -> StarterCharacterScripts -> add LocalScript
+--> Controls a tool in LocalPlayers Backpack
+--> in the Toll Boolean "fly"
+
     -- ========================================
     -- GLOBAL VARIABLES
     -- ========================================
