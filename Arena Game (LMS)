@@ -1,0 +1,258 @@
+-- ARENA (Last Man Standing)
+--> 
+--> Build Lobby
+
+--> ServerStorage -> add Folder "Maps" --> Build Arena as Model "[Customname]map"
+--> ServerStorage -> add tool "Sword"
+--> ReplicatedStorage -> add StringValue "Status"
+
+--> StarterGUI -> add ScreenGUI "Status" -> Add TextLabel Pos [0.5,-250][0,50] Size [0,500][0,50], TextScaled, ZIndex=2 -> add LocalScript
+
+local Status = game:GetService("ReplicatedStorage"):WaitForChild("Status")
+script.Parent.Text = Status.Value
+
+Status:GetPropertyChangedSignal("Value"):Connect(function()
+
+	script.Parent.Text = Status.Value
+
+end)
+
+
+--> ServerScriptStorage --> Add Script "Stats"
+
+local dataStores = game:getService("DataStoreService"):GetDataStore("BucksDataStore")
+local defaultCash = 0
+local defaultWin =0
+local playersLeft = 0
+
+game.Players.PlayerAdded:Connect(function(player)
+	playersLeft = playersLeft + 1
+	local leaderstats = Instance.new("Folder")
+	leaderstats.Name = "leaderstats"
+	leaderstats.Parent = player
+	
+	local bucks = Instance.new("IntValue")
+	bucks.Name = "Bucks"
+	bucks.Value = 0
+	bucks.parent = leaderstats
+	
+	local wins = Instance.new("IntValue")
+	wins.Name = "Wins"
+	wins.Value = 0
+	wins.parent = leaderstats
+	
+	player.CharacterAdded:Connect(function(character)
+		character.Humanoid.WalkSpeed = 16
+		character.Humanoid.Died:Connect(function()
+			if character.humanoid and character.Humanoid:FindFirstChild("creator") then
+			 game.ReplicatedStorage.Status.Value = tostring(character.Humanoid.creator.Value).." KILLED "..player.Name
+			end
+			if character:FindFirstChild("GameTag") then
+				character.GameTag:Destroy()
+			end
+			player:LoadCharacter()
+		end
+	end)
+	
+	-- Data Stores
+	
+	local player_data 
+	
+	pcall(function()
+		player_data = dataStores:GetAsync(player.UserID.."-Bucks")
+		player_data = dataStores:GetAsync(player.UserID.."-Wins")
+	end)
+	
+	if player_data ~= nil than
+		bucks.Value = player_dataat
+		wins.Value = player_data
+	else
+		bucks.Value = defaultCash
+		wins.Value = defaultWin
+	end
+end)
+
+local bindableEvent = Instance.new("BindableEvent")
+
+game.Players.PlayerRemoving:Connect(function(player)
+	pcall(function()
+		DataStores:SetAsync(player.UserID.."-Bucks",player.leaderstats.Bucks.Value )
+		DataStores:SetAsync(player.UserID.."-Wins",player.leaderstats.Wins.Value )
+		playersLeft = playersLeft - 1
+		bindableEvent:Fire()
+	end)
+end)
+
+game:BindToClose(function()
+	while playersLeft > 0 do
+		bindableEvent.Event:Wait()
+	end
+end)
+
+
+
+
+
+--> ServerScriptStorage --> Add Script "Main"
+
+
+--Variables
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local ServerStorage = game:GetService("ServerStorage")
+local MapsFolder = ServerStorage:WaitForChild("Maps")
+local Status = ReplicatedStorage:WaitForChild("Status")
+local GameLength = 60
+local reward = 25
+local starting = 15
+
+
+-- Game Loop
+while true do
+
+	Status.Value = "Waiting for Players"
+	repeat wait(1) until game.Players.NumPlayers >= 2
+	
+	for i = starting, 0, -1 do
+	Status.Value = "New Round in "..i.." Seconds"
+	wait(1)
+	end
+	
+	local plrs = {}
+	for i, player in pairs(game.Players:GetPlayers()) do
+		if player then
+			table.insert(plrs,player) -- Add each player into plrs table		
+		end	
+	end
+	
+	wait(2)
+	
+	local AvailableMaps = MapsFolder:GetChildren()
+	local ChosenMap = AvailableMaps[math.random(1,#AvailableMaps)
+	Status.Value = ChosenMap.Name.." chosen and "..#plrs.." players in game"
+	
+	local ClonedMap = ChosenMap:Clone()
+	ClonedMap.Parent = workspace
+	wait(1)
+	-- Teleport Player to Maps
+	
+	local SpawnPoints = ClonedMap:FindFirstChild("SpawnPoints")
+	if not SpawnPoints then
+		print("Spawnpoints not found!")
+	end
+	
+	local AvailableSpawnPoints = SpawnPoints:GetChildren()
+	
+	for i, player in pairs(plrs) do
+		if i > 6 then   --test
+			table.remove(plrs,i) --test
+		end --test
+		if player then
+			character = player.Character
+			
+			if character then
+				character:FindFirstChild("HumanoidRootPart").CFrame = AvailableSpawnPoints[1].CFrame + Vector3.new(0,10,0)
+				table.remove(AvailableSpawnPoints,1)
+				
+				
+				local Sword = ServerStorage.Sword(clone()
+				Sword.Parent = player.Backpack()
+				local GameTag = Instance.new("BoolValue")
+				GameTag.Name ="GameTag"
+				GameTag.Parent = player.Character
+			else
+				if not player then
+					table.remove(plrs,i)
+				end
+			end
+		end
+	end
+	
+	Status.Value = "Prepare yourselves!"
+	wait(2)
+	
+	for i = GameLength, 0, -1 do
+		
+		for x, Player in pairs(plrs) do
+			if player then
+				character = player.Character
+				if not character then
+					table.remove(plrs,x)
+				else
+					if character:FindFirstChild("GameTag") then
+						print(player.Name.." is still in the game")
+					else
+						table.remove(plrs,x)
+						print(player.Name.." has been removed"
+					end
+				end
+			else
+				table.remove(plrs,x)
+				print(player.Name.." has been removed"
+			end
+		end	
+		
+		Status.Value = "There are "..i.." Seconds remaining and "..#plrs.." players in game"
+		
+		if #plrs == 1 then
+			Status.Value = "VICTORY: "..plrs[1].Name
+			plrs[1].leaderstats.Bucks.Value = plrs[1].leaderstats.Bucks.Value + reward
+			plrs[1].leaderstats.Wins.Value = plrs[1].leaderstats.Wins.Value + 1
+			break
+		elseif #plrs == 0 then
+			Status.Value = "DRAW!"
+			break
+		elseif 
+			Status.Value = "Time's Up!"
+			break
+		end
+		wait(1)
+			
+	end
+	print ("End of the Game")
+	 wait(2)
+	for i, player in pairs(game.Players:GetPlayers()) do
+		character = player.Character
+		if not character then
+			--ignore
+		else
+			if character:FindFirstChild("GameTag") then
+				character.GameTag:Destroy()
+			end
+		
+			if player.Backpack:FindFirstChild("Sword") then
+				player.Backpack.Sword:Destroy()
+			end
+			
+			if character:FindFirstChild("Sword") then
+				character.Sword:Destroy()
+			end
+			
+		end
+		player:LoadCharacter()
+	end
+	
+	ClonedMap:Destroy()
+	Status.Value = "GAME OVER!"
+	wait(10)
+	Status.Value = "Next Game in 15 Seconds"
+	wait(15)
+end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
